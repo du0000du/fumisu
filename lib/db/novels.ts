@@ -5,7 +5,7 @@
  */
 
 import { createClient } from '@/lib/supabase/server'
-import type { Novel, NovelWithStats, NovelStatus, NovelGenre } from '@/lib/supabase/types'
+import type { Novel, NovelWithStats } from '@/lib/supabase/types'
 
 // ============================================================
 // 読み取り

@@ -32,7 +32,7 @@ export default function ChapterEditor(props: Props) {
   // 保存処理（手動・自動保存で共用）
   // ============================================================
   const save = useCallback(
-    (opts?: { redirectAfter?: boolean }) => {
+    () => {
       if (!title.trim()) return
 
       setError(null)
