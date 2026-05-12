@@ -19,7 +19,7 @@ export async function getNovelsWithStats(userId: string): Promise<NovelWithStats
     .from('novels')
     .select(`
       *,
-      chapters(count, word_count, updated_at)
+      chapters(word_count, updated_at)
     `)
     .eq('user_id', userId)
     .order('sort_order', { ascending: true })
@@ -28,7 +28,7 @@ export async function getNovelsWithStats(userId: string): Promise<NovelWithStats
   if (error) throw new Error(`getNovelsWithStats: ${error.message}`)
 
   return (data ?? []).map((row) => {
-    const chapters = (row.chapters as { count: number; word_count: number; updated_at: string }[]) ?? []
+    const chapters = (row.chapters as { word_count: number; updated_at: string }[]) ?? []
     return {
       ...row,
       chapter_count: chapters.length,
