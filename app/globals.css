@@ -138,3 +138,8 @@ body {
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
 }
+
+/* PWA セーフエリア対応（iOS ホームインジケーター回避） */
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}

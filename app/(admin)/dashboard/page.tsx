@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
-import { getNovelStats, getRecentNovels } from '@/lib/db/novels'
+import { getNovelStats, getRecentNovels, getTodayWordCount } from '@/lib/db/novels'
 import { NovelStatusBadge } from '../_components/StatusBadge'
 import { GENRE_LABELS } from '@/lib/supabase/types'
 
@@ -12,9 +12,10 @@ export default async function DashboardPage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return null
 
-  const [stats, recentNovels] = await Promise.all([
+  const [stats, recentNovels, todayWordCount] = await Promise.all([
     getNovelStats(user.id),
     getRecentNovels(user.id, 5),
+    getTodayWordCount(user.id),
   ])
 
   return (
@@ -26,7 +27,13 @@ export default async function DashboardPage() {
       </div>
 
       {/* サマリーカード */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+        <StatCard
+          label="今日"
+          value={todayWordCount.toLocaleString()}
+          unit="字"
+          highlight
+        />
         <StatCard label="作品数" value={stats.totalNovels} unit="作品" />
         <StatCard label="総章数" value={stats.totalChapters} unit="章" />
         <StatCard
@@ -110,10 +117,20 @@ export default async function DashboardPage() {
   )
 }
 
-function StatCard({ label, value, unit }: { label: string; value: number | string; unit: string }) {
+function StatCard({
+  label,
+  value,
+  unit,
+  highlight = false,
+}: {
+  label: string
+  value: number | string
+  unit: string
+  highlight?: boolean
+}) {
   return (
-    <div className="card text-center">
-      <p className="text-2xl font-bold text-main">{value}</p>
+    <div className={`card text-center ${highlight ? 'border-theme' : ''}`}>
+      <p className={`text-2xl font-bold ${highlight ? 'text-theme' : 'text-main'}`}>{value}</p>
       <p className="text-xs text-muted mt-0.5">{unit}</p>
       <p className="text-xs text-sub mt-1">{label}</p>
     </div>

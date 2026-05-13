@@ -4,8 +4,9 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { getNovelById } from '@/lib/db/novels'
 import { getChaptersByNovelId } from '@/lib/db/chapters'
-import { NovelStatusBadge, ChapterStatusBadge } from '../../../_components/StatusBadge'
+import { ChapterStatusBadge } from '../../../_components/StatusBadge'
 import ReorderButtons from './_components/ReorderButtons'
+import NovelStatusSelector from './_components/NovelStatusSelector'
 
 export const metadata: Metadata = { title: '章管理' }
 
@@ -40,7 +41,7 @@ export default async function ChaptersPage({ params }: { params: { id: string } 
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
             <h1 className="text-xl font-bold text-main truncate">{novel.title}</h1>
-            <NovelStatusBadge status={novel.status} />
+            <NovelStatusSelector novelId={novel.id} initialStatus={novel.status} />
           </div>
           <p className="text-xs text-muted mt-1">
             {chapters.length} 章 · {totalWordCount.toLocaleString()} 字

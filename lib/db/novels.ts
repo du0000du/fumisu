@@ -109,3 +109,18 @@ export async function getRecentNovels(userId: string, limit = 5): Promise<Novel[
   if (error) throw new Error(`getRecentNovels: ${error.message}`)
   return (data ?? []) as Novel[]
 }
+
+/** 今日（00:00以降）に更新された章の文字数合計 */
+export async function getTodayWordCount(userId: string): Promise<number> {
+  const supabase = await createClient()
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+
+  const { data } = await supabase
+    .from('chapters')
+    .select('word_count')
+    .eq('user_id', userId)
+    .gte('updated_at', today.toISOString())
+
+  return (data ?? []).reduce((s, c) => s + (c.word_count ?? 0), 0)
+}

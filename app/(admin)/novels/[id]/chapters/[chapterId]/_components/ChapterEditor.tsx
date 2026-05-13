@@ -4,6 +4,7 @@ import { useState, useTransition, useRef, useCallback, useEffect } from 'react'
 import { createChapter, updateChapter, deleteChapter } from '@/lib/actions/chapters'
 import type { Chapter, ChapterStatus } from '@/lib/supabase/types'
 import { CHAPTER_STATUS_LABELS } from '@/lib/supabase/types'
+import BodyPreview from './BodyPreview'
 
 type Props =
   | { mode: 'create'; novelId: string }
@@ -24,6 +25,7 @@ export default function ChapterEditor(props: Props) {
   const [error, setError] = useState<string | null>(null)
   const [showDelete, setShowDelete] = useState(false)
   const [isPending, startTransition] = useTransition()
+  const [view, setView] = useState<'edit' | 'preview'>('edit')
 
   const autosaveTimer = useRef<NodeJS.Timeout | null>(null)
   const charCount = body.replace(/[\s\r\n]/g, '').length
@@ -91,6 +93,7 @@ export default function ChapterEditor(props: Props) {
   }
 
   const handleDelete = () => {
+    if (isPending) return
     startTransition(async () => {
       const result = await deleteChapter(chapter!.id, props.novelId)
       if (!result.success) setError(result.error)
@@ -101,7 +104,33 @@ export default function ChapterEditor(props: Props) {
     <form onSubmit={handleSubmit} className="space-y-4">
       {/* ツールバー */}
       <div className="editor-toolbar flex items-center justify-between gap-3 flex-wrap">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 flex-wrap">
+          {/* 編集 / プレビュー タブ（編集モードのみ表示） */}
+          {isEdit && (
+            <div className="inline-flex rounded-lg border border-border-main overflow-hidden text-xs">
+              <button
+                type="button"
+                onClick={() => setView('edit')}
+                aria-pressed={view === 'edit'}
+                className={`px-3 py-1.5 transition-colors ${
+                  view === 'edit' ? 'bg-theme text-theme-t' : 'text-sub hover:bg-lv3'
+                }`}
+              >
+                編集
+              </button>
+              <button
+                type="button"
+                onClick={() => setView('preview')}
+                aria-pressed={view === 'preview'}
+                className={`px-3 py-1.5 transition-colors ${
+                  view === 'preview' ? 'bg-theme text-theme-t' : 'text-sub hover:bg-lv3'
+                }`}
+              >
+                プレビュー
+              </button>
+            </div>
+          )}
+
           {/* ステータス切替 */}
           <select
             value={status}
@@ -165,13 +194,17 @@ export default function ChapterEditor(props: Props) {
 
       <hr style={{ borderColor: 'var(--border_sub)' }} />
 
-      {/* 本文エディタ */}
-      <textarea
-        value={body}
-        onChange={(e) => setBody(e.target.value)}
-        className="editor-textarea"
-        placeholder={`本文を入力してください...\n\n段落の区切りは空行で表現します。\n自動保存は入力停止から3秒後に実行されます（Ctrl+S / Cmd+S でも保存）。`}
-      />
+      {/* 本文エディタ / プレビュー */}
+      {view === 'preview' && isEdit ? (
+        <BodyPreview body={body} />
+      ) : (
+        <textarea
+          value={body}
+          onChange={(e) => setBody(e.target.value)}
+          className="editor-textarea"
+          placeholder={`本文を入力してください...\n\n段落の区切りは空行で表現します。\n自動保存は入力停止から3秒後に実行されます（Ctrl+S / Cmd+S でも保存）。`}
+        />
+      )}
 
       {/* エラー */}
       {error && (
@@ -192,7 +225,8 @@ export default function ChapterEditor(props: Props) {
               type="button"
               onClick={handleDelete}
               disabled={isPending}
-              className="btn btn-danger text-xs"
+              aria-busy={isPending}
+              className={`btn btn-danger text-xs ${isPending ? 'pointer-events-none opacity-60' : ''}`}
             >
               {isPending ? '削除中...' : '削除する'}
             </button>

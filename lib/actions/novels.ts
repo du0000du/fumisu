@@ -80,6 +80,32 @@ export async function updateNovel(id: string, formData: FormData): Promise<Actio
 }
 
 // ============================================================
+// 作品ステータスのみ更新（章一覧ページ等から即時変更用）
+// ============================================================
+export async function updateNovelStatus(id: string, status: NovelStatus): Promise<ActionResult> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { success: false, error: '認証が必要です' }
+
+  const allowed: NovelStatus[] = ['draft', 'ongoing', 'completed', 'private']
+  if (!allowed.includes(status)) return { success: false, error: '不正なステータスです' }
+
+  const { error } = await supabase
+    .from('novels')
+    .update({ status })
+    .eq('id', id)
+    .eq('user_id', user.id)
+
+  if (error) return { success: false, error: `更新に失敗しました: ${error.message}` }
+
+  revalidatePath(`/novels/${id}`)
+  revalidatePath(`/novels/${id}/chapters`)
+  revalidatePath('/novels')
+  revalidatePath('/dashboard')
+  return { success: true }
+}
+
+// ============================================================
 // 作品削除
 // ============================================================
 export async function deleteNovel(id: string): Promise<ActionResult> {

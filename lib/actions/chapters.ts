@@ -112,7 +112,81 @@ export async function deleteChapter(id: string, novelId: string): Promise<Action
 }
 
 // ============================================================
-// 章の順序入れ替え
+// 章の順序入れ替え（隣接スワップ）— ↑↓ボタンから呼び出す
+// ============================================================
+export async function reorderChapter(
+  chapterId: string,
+  novelId: string,
+  direction: 'up' | 'down'
+): Promise<ActionResult> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { success: false, error: '認証が必要です' }
+
+  const { data: target, error: targetErr } = await supabase
+    .from('chapters')
+    .select('id, chapter_number')
+    .eq('id', chapterId)
+    .eq('user_id', user.id)
+    .eq('novel_id', novelId)
+    .single()
+
+  if (targetErr || !target) {
+    return { success: false, error: '対象の章が見つかりません' }
+  }
+
+  const baseQuery = supabase
+    .from('chapters')
+    .select('id, chapter_number')
+    .eq('user_id', user.id)
+    .eq('novel_id', novelId)
+
+  const neighborQuery =
+    direction === 'up'
+      ? baseQuery.lt('chapter_number', target.chapter_number).order('chapter_number', { ascending: false })
+      : baseQuery.gt('chapter_number', target.chapter_number).order('chapter_number', { ascending: true })
+
+  const { data: neighbor, error: neighborErr } = await neighborQuery.limit(1).maybeSingle()
+
+  if (neighborErr) {
+    return { success: false, error: `並び替えに失敗しました: ${neighborErr.message}` }
+  }
+  if (!neighbor) {
+    return { success: true }
+  }
+
+  // 一意制約衝突を避けるため、targetを一時値→neighborの番号→target元番号 の順で更新
+  const TEMP = -1
+  const targetNumber = target.chapter_number
+  const neighborNumber = neighbor.chapter_number
+
+  const step1 = await supabase
+    .from('chapters')
+    .update({ chapter_number: TEMP })
+    .eq('id', target.id)
+    .eq('user_id', user.id)
+  if (step1.error) return { success: false, error: `並び替えに失敗しました: ${step1.error.message}` }
+
+  const step2 = await supabase
+    .from('chapters')
+    .update({ chapter_number: targetNumber })
+    .eq('id', neighbor.id)
+    .eq('user_id', user.id)
+  if (step2.error) return { success: false, error: `並び替えに失敗しました: ${step2.error.message}` }
+
+  const step3 = await supabase
+    .from('chapters')
+    .update({ chapter_number: neighborNumber })
+    .eq('id', target.id)
+    .eq('user_id', user.id)
+  if (step3.error) return { success: false, error: `並び替えに失敗しました: ${step3.error.message}` }
+
+  revalidatePath(`/novels/${novelId}/chapters`)
+  return { success: true }
+}
+
+// ============================================================
+// 章の順序入れ替え（バッチ）
 // ============================================================
 export async function reorderChapters(
   novelId: string,

@@ -11,6 +11,7 @@ export default function DeleteNovelButton({ novelId, novelTitle }: Props) {
   const [error, setError] = useState<string | null>(null)
 
   const handleDelete = () => {
+    if (isPending) return
     startTransition(async () => {
       const result = await deleteNovel(novelId)
       if (!result.success) setError(result.error)
@@ -39,7 +40,8 @@ export default function DeleteNovelButton({ novelId, novelTitle }: Props) {
         <button
           onClick={handleDelete}
           disabled={isPending}
-          className="btn btn-danger text-sm"
+          aria-busy={isPending}
+          className={`btn btn-danger text-sm ${isPending ? 'pointer-events-none opacity-60' : ''}`}
         >
           {isPending ? '削除中...' : '削除する'}
         </button>

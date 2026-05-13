@@ -13,6 +13,9 @@ type Props =
 const GENRES = Object.entries(GENRE_LABELS) as [NovelGenre, string][]
 const STATUSES = Object.entries(STATUS_LABELS) as [NovelStatus, string][]
 
+const MAX_TITLE = 100
+const MAX_DESC = 500
+
 export default function NovelForm(props: Props) {
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
@@ -21,8 +24,25 @@ export default function NovelForm(props: Props) {
 
   const defaultValues = props.mode === 'edit' ? props.novel : null
 
+  const [title, setTitle] = useState(defaultValues?.title ?? '')
+  const [description, setDescription] = useState(defaultValues?.description ?? '')
+
+  const titleError =
+    title.trim().length === 0
+      ? 'タイトルは必須です'
+      : title.length > MAX_TITLE
+      ? `${MAX_TITLE}字以内で入力してください`
+      : ''
+  const descError =
+    description.length > MAX_DESC
+      ? `${MAX_DESC}字以内で入力してください`
+      : ''
+
+  const hasError = Boolean(titleError) || Boolean(descError)
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    if (hasError) return
     setError(null)
     const formData = new FormData(e.currentTarget)
 
@@ -56,10 +76,21 @@ export default function NovelForm(props: Props) {
           type="text"
           className="input"
           placeholder="作品のタイトルを入力"
-          defaultValue={defaultValues?.title ?? ''}
-          maxLength={200}
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          maxLength={MAX_TITLE + 50}
+          aria-invalid={Boolean(titleError)}
+          aria-describedby="title-help"
           required
         />
+        <div id="title-help" className="flex items-center justify-between mt-1">
+          <p className={`text-xs ${titleError ? 'text-neg' : 'text-muted'}`}>
+            {titleError || '　'}
+          </p>
+          <p className={`text-xs ${title.length > MAX_TITLE ? 'text-neg' : 'text-muted'}`}>
+            {title.length} / {MAX_TITLE}
+          </p>
+        </div>
       </div>
 
       {/* ジャンル + ステータス */}
@@ -100,9 +131,20 @@ export default function NovelForm(props: Props) {
           name="description"
           className="input"
           placeholder="作品のあらすじを入力（任意）"
-          defaultValue={defaultValues?.description ?? ''}
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
           rows={4}
+          aria-invalid={Boolean(descError)}
+          aria-describedby="description-help"
         />
+        <div id="description-help" className="flex items-center justify-between mt-1">
+          <p className={`text-xs ${descError ? 'text-neg' : 'text-muted'}`}>
+            {descError || '　'}
+          </p>
+          <p className={`text-xs ${description.length > MAX_DESC ? 'text-neg' : 'text-muted'}`}>
+            {description.length} / {MAX_DESC}
+          </p>
+        </div>
       </div>
 
       {/* 作者メモ（非公開） */}
@@ -137,7 +179,7 @@ export default function NovelForm(props: Props) {
       <div className="flex items-center gap-3 pt-2">
         <button
           type="submit"
-          disabled={isPending}
+          disabled={isPending || hasError}
           className="btn btn-primary min-w-[120px]"
         >
           {isPending
