@@ -26,10 +26,11 @@ export default function Nav() {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+              aria-current={active ? 'page' : undefined}
+              className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors ${
                 active
-                  ? 'bg-theme text-theme-t'
-                  : 'text-sub hover:bg-lv3 hover:text-main'
+                  ? 'text-theme font-semibold bg-lv3'
+                  : 'text-sub font-medium hover:bg-lv3 hover:text-main'
               }`}
             >
               <span>{item.icon}</span>
@@ -47,8 +48,9 @@ export default function Nav() {
             <Link
               key={item.href}
               href={item.href}
+              aria-current={active ? 'page' : undefined}
               className={`flex-1 flex flex-col items-center py-2 text-xs gap-0.5 transition-colors ${
-                active ? 'text-theme' : 'text-sub'
+                active ? 'text-theme font-semibold' : 'text-sub'
               }`}
             >
               <span className="text-xl leading-none">{item.icon}</span>

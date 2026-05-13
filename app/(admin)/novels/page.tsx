@@ -76,7 +76,13 @@ export default async function NovelsPage() {
                 </div>
 
                 {/* アクションボタン */}
-                <div className="flex items-center gap-2 shrink-0">
+                <div className="flex items-center gap-2 shrink-0 flex-wrap justify-end">
+                  <Link
+                    href={`/novels/${novel.id}/chapters/new`}
+                    className="btn btn-primary text-xs px-3 py-1.5"
+                  >
+                    ＋ 章を追加
+                  </Link>
                   <Link
                     href={`/novels/${novel.id}/chapters`}
                     className="btn btn-secondary text-xs px-3 py-1.5"

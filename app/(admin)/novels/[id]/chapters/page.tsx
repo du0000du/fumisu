@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/server'
 import { getNovelById } from '@/lib/db/novels'
 import { getChaptersByNovelId } from '@/lib/db/chapters'
 import { NovelStatusBadge, ChapterStatusBadge } from '../../../_components/StatusBadge'
+import ReorderButtons from './_components/ReorderButtons'
 
 export const metadata: Metadata = { title: '章管理' }
 
@@ -62,13 +63,21 @@ export default async function ChaptersPage({ params }: { params: { id: string } 
         </div>
       ) : (
         <div className="space-y-2">
-          {chapters.map((chapter) => (
-            <Link
+          {chapters.map((chapter, index) => (
+            <div
               key={chapter.id}
-              href={`/novels/${novel.id}/chapters/${chapter.id}`}
               className="card flex items-center justify-between gap-3 hover:border-theme transition-colors group"
             >
-              <div className="flex items-center gap-3 flex-1 min-w-0">
+              <ReorderButtons
+                chapterId={chapter.id}
+                novelId={novel.id}
+                isFirst={index === 0}
+                isLast={index === chapters.length - 1}
+              />
+              <Link
+                href={`/novels/${novel.id}/chapters/${chapter.id}`}
+                className="flex items-center gap-3 flex-1 min-w-0"
+              >
                 <span className="text-muted text-xs w-6 text-right shrink-0">
                   {chapter.chapter_number}
                 </span>
@@ -83,9 +92,9 @@ export default async function ChaptersPage({ params }: { params: { id: string } 
                     })}
                   </p>
                 </div>
-              </div>
+              </Link>
               <ChapterStatusBadge status={chapter.status} />
-            </Link>
+            </div>
           ))}
         </div>
       )}

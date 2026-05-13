@@ -26,7 +26,8 @@ export default function ChapterEditor(props: Props) {
   const [isPending, startTransition] = useTransition()
 
   const autosaveTimer = useRef<NodeJS.Timeout | null>(null)
-  const wordCount = body.length
+  const charCount = body.replace(/[\s\r\n]/g, '').length
+  const lineCount = body.split('\n').filter((l) => l.trim()).length
 
   // ============================================================
   // 保存処理（手動・自動保存で共用）
@@ -99,7 +100,7 @@ export default function ChapterEditor(props: Props) {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       {/* ツールバー */}
-      <div className="flex items-center justify-between gap-3 flex-wrap">
+      <div className="editor-toolbar flex items-center justify-between gap-3 flex-wrap">
         <div className="flex items-center gap-3">
           {/* ステータス切替 */}
           <select
@@ -112,9 +113,9 @@ export default function ChapterEditor(props: Props) {
             ))}
           </select>
 
-          {/* 文字数カウント */}
+          {/* 文字数カウント（本文のみ・空白改行除外） */}
           <span className="text-xs text-muted">
-            {wordCount.toLocaleString()} 字
+            {charCount.toLocaleString()} 字 / {lineCount} 行
           </span>
         </div>
 
