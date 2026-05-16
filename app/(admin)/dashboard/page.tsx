@@ -19,15 +19,15 @@ export default async function DashboardPage() {
   ])
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8 w-full min-w-0">
       {/* ヘッダー */}
       <div>
-        <h1 className="text-2xl font-bold text-main">ダッシュボード</h1>
+        <h1 className="text-xl sm:text-2xl font-bold text-main">ダッシュボード</h1>
         <p className="text-sub text-sm mt-1">執筆の全体像を確認できます</p>
       </div>
 
       {/* サマリーカード */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 sm:gap-3">
         <StatCard
           label="今日"
           value={todayWordCount.toLocaleString()}
@@ -48,9 +48,9 @@ export default async function DashboardPage() {
 
       {/* 最近の作品 */}
       <section>
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-main">最近更新した作品</h2>
-          <Link href="/novels" className="text-sm text-theme hover:underline">
+        <div className="flex items-center justify-between gap-2 mb-4">
+          <h2 className="text-base sm:text-lg font-semibold text-main">最近更新した作品</h2>
+          <Link href="/novels" className="text-sm text-theme hover:underline shrink-0">
             すべて見る →
           </Link>
         </div>
@@ -85,8 +85,8 @@ export default async function DashboardPage() {
 
       {/* クイックアクション */}
       <section>
-        <h2 className="text-lg font-semibold text-main mb-4">クイックアクション</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <h2 className="text-base sm:text-lg font-semibold text-main mb-4">クイックアクション</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <Link
             href="/novels/new"
             className="card flex items-center gap-3 hover:border-theme transition-colors group"
@@ -129,10 +129,10 @@ function StatCard({
   highlight?: boolean
 }) {
   return (
-    <div className={`card text-center ${highlight ? 'border-theme' : ''}`}>
-      <p className={`text-2xl font-bold ${highlight ? 'text-theme' : 'text-main'}`}>{value}</p>
+    <div className={`card text-center min-w-0 ${highlight ? 'border-theme' : ''}`}>
+      <p className={`text-xl sm:text-2xl font-bold truncate ${highlight ? 'text-theme' : 'text-main'}`}>{value}</p>
       <p className="text-xs text-muted mt-0.5">{unit}</p>
-      <p className="text-xs text-sub mt-1">{label}</p>
+      <p className="text-xs text-sub mt-1 truncate">{label}</p>
     </div>
   )
 }

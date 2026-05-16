@@ -94,7 +94,7 @@ export default function NovelForm(props: Props) {
       </div>
 
       {/* ジャンル + ステータス */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label htmlFor="genre" className="label">ジャンル</label>
           <select
@@ -175,12 +175,12 @@ export default function NovelForm(props: Props) {
         </div>
       )}
 
-      {/* アクションボタン */}
-      <div className="flex items-center gap-3 pt-2">
+      {/* アクションボタン — スマホは縦並びでタップしやすく */}
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 pt-2">
         <button
           type="submit"
           disabled={isPending || hasError}
-          className="btn btn-primary min-w-[120px]"
+          className="btn btn-primary w-full sm:w-auto sm:min-w-[120px]"
         >
           {isPending
             ? '保存中...'
@@ -191,7 +191,7 @@ export default function NovelForm(props: Props) {
         <button
           type="button"
           onClick={() => router.back()}
-          className="btn btn-secondary"
+          className="btn btn-secondary w-full sm:w-auto"
         >
           キャンセル
         </button>

@@ -21,7 +21,7 @@ export default function BodyPreview({ body }: { body: string }) {
   const sizeClass  = hydrated ? `reading-size-${size}`  : 'reading-size-m'
 
   return (
-    <div className={themeClass}>
+    <div className={`${themeClass} w-full min-w-0`}>
       <ReadingControls
         theme={theme}
         size={size}
@@ -30,7 +30,7 @@ export default function BodyPreview({ body }: { body: string }) {
       />
 
       <article
-        className={`reading-content reading-content--enhanced ${sizeClass} rounded-xl px-4 py-8 sm:px-8 sm:py-12 min-h-[calc(100vh-260px)]`}
+        className={`reading-content reading-content--enhanced ${sizeClass} rounded-xl px-4 py-6 sm:px-8 sm:py-12 min-h-[calc(100vh-300px)] sm:min-h-[calc(100vh-260px)] break-anywhere`}
       >
         {paragraphs.map((para, i) => (
           <p key={i} className="whitespace-pre-wrap">

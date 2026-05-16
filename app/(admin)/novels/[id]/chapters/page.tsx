@@ -24,15 +24,15 @@ export default async function ChaptersPage({ params }: { params: { id: string } 
   const totalWordCount = chapters.reduce((s, c) => s + c.word_count, 0)
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 w-full min-w-0">
       {/* パンくず */}
-      <nav className="text-sm text-sub flex items-center gap-1 flex-wrap">
+      <nav className="text-sm text-sub flex items-center gap-1 flex-wrap min-w-0">
         <Link href="/novels" className="hover:text-main">作品管理</Link>
-        <span>/</span>
-        <Link href={`/novels/${novel.id}`} className="hover:text-main truncate max-w-[200px]">
+        <span aria-hidden="true">/</span>
+        <Link href={`/novels/${novel.id}`} className="hover:text-main truncate max-w-[40vw] sm:max-w-[200px]">
           {novel.title}
         </Link>
-        <span>/</span>
+        <span aria-hidden="true">/</span>
         <span className="text-muted">章管理</span>
       </nav>
 
@@ -40,7 +40,7 @@ export default async function ChaptersPage({ params }: { params: { id: string } 
       <div className="flex items-start justify-between gap-3 flex-wrap">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
-            <h1 className="text-xl font-bold text-main truncate">{novel.title}</h1>
+            <h1 className="text-lg sm:text-xl font-bold text-main break-anywhere">{novel.title}</h1>
             <NovelStatusSelector novelId={novel.id} initialStatus={novel.status} />
           </div>
           <p className="text-xs text-muted mt-1">
@@ -67,7 +67,7 @@ export default async function ChaptersPage({ params }: { params: { id: string } 
           {chapters.map((chapter, index) => (
             <div
               key={chapter.id}
-              className="card flex items-center justify-between gap-3 hover:border-theme transition-colors group"
+              className="card flex items-center justify-between gap-2 sm:gap-3 hover:border-theme transition-colors group min-w-0"
             >
               <ReorderButtons
                 chapterId={chapter.id}
@@ -77,7 +77,7 @@ export default async function ChaptersPage({ params }: { params: { id: string } 
               />
               <Link
                 href={`/novels/${novel.id}/chapters/${chapter.id}`}
-                className="flex items-center gap-3 flex-1 min-w-0"
+                className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0"
               >
                 <span className="text-muted text-xs w-6 text-right shrink-0">
                   {chapter.chapter_number}
@@ -86,7 +86,7 @@ export default async function ChaptersPage({ params }: { params: { id: string } 
                   <p className="text-sm font-medium text-main truncate group-hover:text-theme transition-colors">
                     {chapter.title}
                   </p>
-                  <p className="text-xs text-muted mt-0.5">
+                  <p className="text-xs text-muted mt-0.5 truncate">
                     {chapter.word_count.toLocaleString()} 字 ·{' '}
                     {new Date(chapter.updated_at).toLocaleDateString('ja-JP', {
                       month: 'short', day: 'numeric',
@@ -94,7 +94,9 @@ export default async function ChaptersPage({ params }: { params: { id: string } 
                   </p>
                 </div>
               </Link>
-              <ChapterStatusBadge status={chapter.status} />
+              <div className="shrink-0">
+                <ChapterStatusBadge status={chapter.status} />
+              </div>
             </div>
           ))}
         </div>

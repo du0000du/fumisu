@@ -31,9 +31,9 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="space-y-8 max-w-lg">
+    <div className="space-y-6 sm:space-y-8 w-full max-w-lg min-w-0">
       <div>
-        <h1 className="text-2xl font-bold text-main">設定</h1>
+        <h1 className="text-xl sm:text-2xl font-bold text-main">設定</h1>
         <p className="text-sub text-sm mt-1">アプリの表示・アカウントを管理できます</p>
       </div>
 

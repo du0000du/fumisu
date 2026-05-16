@@ -28,12 +28,12 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-lv1">
-      <div className="w-full max-w-sm px-4">
+    <div className="min-h-screen flex items-center justify-center bg-lv1 px-4 py-8">
+      <div className="w-full max-w-sm">
         {/* ロゴ */}
-        <div className="text-center mb-10">
+        <div className="text-center mb-8 sm:mb-10">
           <div className="text-5xl mb-4">📖</div>
-          <h1 className="text-3xl font-bold text-main tracking-tight">文巣</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-main tracking-tight">文巣</h1>
           <p className="text-sm text-sub mt-2">書くことと読まれることを、一つの場所に。</p>
         </div>
 

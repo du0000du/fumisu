@@ -101,9 +101,9 @@ export default function ChapterEditor(props: Props) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-4 w-full min-w-0">
       {/* ツールバー */}
-      <div className="editor-toolbar flex items-center justify-between gap-3 flex-wrap">
+      <div className="editor-toolbar flex items-center justify-between gap-2 sm:gap-3 flex-wrap">
         <div className="flex items-center gap-3 flex-wrap">
           {/* 編集 / プレビュー タブ（編集モードのみ表示） */}
           {isEdit && (
@@ -187,7 +187,7 @@ export default function ChapterEditor(props: Props) {
         type="text"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
-        className="w-full bg-transparent border-none outline-none text-2xl font-bold text-main placeholder-muted focus:ring-0 py-2"
+        className="w-full bg-transparent border-none outline-none text-xl sm:text-2xl font-bold text-main placeholder-muted focus:ring-0 py-2"
         placeholder="章のタイトル"
         required
       />

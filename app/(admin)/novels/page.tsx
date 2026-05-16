@@ -15,14 +15,14 @@ export default async function NovelsPage() {
   const novels = await getNovelsWithStats(user.id)
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 w-full min-w-0">
       {/* ヘッダー */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-main">作品管理</h1>
+      <div className="flex items-center justify-between gap-3 flex-wrap">
+        <div className="min-w-0">
+          <h1 className="text-xl sm:text-2xl font-bold text-main">作品管理</h1>
           <p className="text-sub text-sm mt-1">{novels.length} 件の作品</p>
         </div>
-        <Link href="/novels/new" className="btn btn-primary">
+        <Link href="/novels/new" className="btn btn-primary shrink-0">
           ＋ 新しい作品
         </Link>
       </div>
@@ -43,12 +43,12 @@ export default async function NovelsPage() {
         <div className="space-y-3">
           {novels.map((novel) => (
             <div key={novel.id} className="card hover:border-theme transition-colors group">
-              <div className="flex items-start justify-between gap-3">
+              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
                     <Link
                       href={`/novels/${novel.id}/chapters`}
-                      className="font-semibold text-main hover:text-theme transition-colors"
+                      className="font-semibold text-main hover:text-theme transition-colors break-anywhere"
                     >
                       {novel.title}
                     </Link>
@@ -56,17 +56,17 @@ export default async function NovelsPage() {
                   </div>
 
                   {novel.description && (
-                    <p className="text-sub text-sm mt-1 line-clamp-2">{novel.description}</p>
+                    <p className="text-sub text-sm mt-1 line-clamp-2 break-anywhere">{novel.description}</p>
                   )}
 
                   {/* メタ情報 */}
-                  <div className="flex items-center gap-3 mt-2 text-xs text-muted flex-wrap">
+                  <div className="flex items-center gap-x-2 gap-y-1 mt-2 text-xs text-muted flex-wrap">
                     <span>{GENRE_LABELS[novel.genre]}</span>
-                    <span>·</span>
+                    <span aria-hidden="true">·</span>
                     <span>{novel.chapter_count} 章</span>
-                    <span>·</span>
+                    <span aria-hidden="true">·</span>
                     <span>{novel.total_word_count.toLocaleString()} 字</span>
-                    <span>·</span>
+                    <span aria-hidden="true">·</span>
                     <span>
                       {new Date(novel.updated_at).toLocaleDateString('ja-JP', {
                         year: 'numeric', month: 'short', day: 'numeric',
@@ -75,23 +75,23 @@ export default async function NovelsPage() {
                   </div>
                 </div>
 
-                {/* アクションボタン */}
-                <div className="flex items-center gap-2 shrink-0 flex-wrap justify-end">
+                {/* アクションボタン — スマホは横幅いっぱい、デスクトップは右寄せ */}
+                <div className="flex items-center gap-2 flex-wrap sm:shrink-0 sm:justify-end">
                   <Link
                     href={`/novels/${novel.id}/chapters/new`}
-                    className="btn btn-primary text-xs px-3 py-1.5"
+                    className="btn btn-primary text-xs px-3 py-1.5 flex-1 sm:flex-none text-center"
                   >
                     ＋ 章を追加
                   </Link>
                   <Link
                     href={`/novels/${novel.id}/chapters`}
-                    className="btn btn-secondary text-xs px-3 py-1.5"
+                    className="btn btn-secondary text-xs px-3 py-1.5 flex-1 sm:flex-none text-center"
                   >
                     章を管理
                   </Link>
                   <Link
                     href={`/novels/${novel.id}`}
-                    className="btn btn-secondary text-xs px-3 py-1.5"
+                    className="btn btn-secondary text-xs px-3 py-1.5 flex-1 sm:flex-none text-center"
                   >
                     編集
                   </Link>

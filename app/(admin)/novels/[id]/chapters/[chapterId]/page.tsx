@@ -24,16 +24,16 @@ export default async function ChapterEditPage({
   if (!novel || !chapter) notFound()
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 w-full min-w-0">
       {/* パンくず */}
-      <nav className="text-sm text-sub flex items-center gap-1 flex-wrap">
+      <nav className="text-sm text-sub flex items-center gap-1 flex-wrap min-w-0">
         <Link href="/novels" className="hover:text-main">作品管理</Link>
-        <span>/</span>
-        <Link href={`/novels/${novel.id}/chapters`} className="hover:text-main truncate max-w-[160px]">
+        <span aria-hidden="true">/</span>
+        <Link href={`/novels/${novel.id}/chapters`} className="hover:text-main truncate max-w-[35vw] sm:max-w-[160px]">
           {novel.title}
         </Link>
-        <span>/</span>
-        <span className="text-muted truncate max-w-[120px]">第{chapter.chapter_number}章</span>
+        <span aria-hidden="true">/</span>
+        <span className="text-muted truncate max-w-[30vw] sm:max-w-[120px]">第{chapter.chapter_number}章</span>
       </nav>
 
       <ChapterEditor mode="edit" novelId={params.id} chapter={chapter} />

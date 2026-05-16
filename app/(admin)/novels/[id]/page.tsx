@@ -17,18 +17,18 @@ export default async function NovelEditPage({ params }: { params: { id: string }
   if (!novel) notFound()
 
   return (
-    <div className="space-y-8 max-w-2xl">
+    <div className="space-y-8 w-full max-w-2xl min-w-0">
       {/* パンくず */}
-      <nav className="text-sm text-sub flex items-center gap-1">
+      <nav className="text-sm text-sub flex items-center gap-1 flex-wrap">
         <Link href="/novels" className="hover:text-main">作品管理</Link>
-        <span>/</span>
-        <span className="text-main truncate max-w-[200px]">{novel.title}</span>
-        <span>/</span>
+        <span aria-hidden="true">/</span>
+        <span className="text-main truncate max-w-[40vw] sm:max-w-[200px]">{novel.title}</span>
+        <span aria-hidden="true">/</span>
         <span className="text-muted">編集</span>
       </nav>
 
       <div>
-        <h1 className="text-2xl font-bold text-main">作品編集</h1>
+        <h1 className="text-xl sm:text-2xl font-bold text-main">作品編集</h1>
         <p className="text-sub text-sm mt-1 truncate">{novel.title}</p>
       </div>
 
