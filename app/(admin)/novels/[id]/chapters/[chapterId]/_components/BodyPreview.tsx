@@ -30,7 +30,7 @@ export default function BodyPreview({ body }: { body: string }) {
       />
 
       <article
-        className={`reading-content reading-content--enhanced ${sizeClass} rounded-xl pl-4 pr-6 py-6 sm:px-8 sm:py-12 min-h-[calc(100vh-300px)] sm:min-h-[calc(100vh-260px)] break-anywhere`}
+        className={`reading-content reading-content--enhanced ${sizeClass} rounded-xl pl-4 pr-8 py-6 sm:px-8 sm:py-12 min-h-[calc(100vh-300px)] sm:min-h-[calc(100vh-260px)] break-anywhere`}
       >
         {paragraphs.map((para, i) => (
           <p key={i} className="whitespace-pre-wrap">

@@ -136,11 +136,16 @@ img, video, svg, canvas, iframe { max-width: 100%; height: auto; }
   font-size: 1rem;
   line-height: 1.9;
   color: var(--text_main);
-  padding: 0;
+  /* R-018: スマホでスクロールバーが本文に被らないよう右側に余白を確保 */
+  padding: 0 1.5rem 0 0;
   font-family: 'Hiragino Mincho ProN', 'Yu Mincho', 'YuMincho', '游明朝', serif;
 }
 @media (min-width: 768px) {
-  .editor-textarea { min-height: calc(100vh - 220px); }
+  .editor-textarea {
+    min-height: calc(100vh - 220px);
+    /* デスクトップはスクロールバー幅が安定しているので余白は控えめでよい */
+    padding: 0;
+  }
 }
 .editor-textarea::placeholder { color: var(--text_muted); }
 
