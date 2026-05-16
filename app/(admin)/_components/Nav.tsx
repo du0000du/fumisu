@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useShouldHideNav } from './useScrollDirection'
 
 const navItems = [
   { href: '/dashboard', label: 'ダッシュボード', icon: '🏠' },
@@ -11,6 +12,7 @@ const navItems = [
 
 export default function Nav() {
   const pathname = usePathname()
+  const hidden = useShouldHideNav()
 
   return (
     <>
@@ -41,7 +43,11 @@ export default function Nav() {
       </aside>
 
       {/* ボトムナビ（スマホ） */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-lv2 border-t border-border-main flex z-50 safe-bottom">
+      <nav
+        aria-label="メインナビゲーション"
+        data-hidden={hidden ? 'true' : 'false'}
+        className="md:hidden fixed bottom-0 left-0 right-0 bg-lv2 border-t border-border-main flex z-50 safe-bottom nav-hide-on-scroll"
+      >
         {navItems.map((item) => {
           const active = pathname === item.href || (item.href !== '/dashboard' && pathname.startsWith(item.href))
           return (
@@ -49,12 +55,22 @@ export default function Nav() {
               key={item.href}
               href={item.href}
               aria-current={active ? 'page' : undefined}
-              className={`flex-1 flex flex-col items-center py-2 text-xs gap-0.5 transition-colors ${
-                active ? 'text-theme font-semibold' : 'text-sub'
+              className={`flex-1 flex flex-col items-center justify-center gap-0.5 py-2.5 text-xs tap-target relative transition-colors ${
+                active
+                  ? 'text-theme font-bold'
+                  : 'text-sub hover:text-main'
               }`}
             >
-              <span className="text-xl leading-none">{item.icon}</span>
-              {item.label}
+              {active && (
+                <span
+                  aria-hidden="true"
+                  className="absolute top-0 left-1/2 -translate-x-1/2 h-0.5 w-10 rounded-b bg-theme"
+                />
+              )}
+              <span className={`text-xl leading-none ${active ? '' : 'opacity-80'}`}>
+                {item.icon}
+              </span>
+              <span>{item.label}</span>
             </Link>
           )
         })}

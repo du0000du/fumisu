@@ -1,6 +1,10 @@
 'use client'
 
+import { ReadingControls, useReadingSettings } from './ReadingControls'
+
 export default function BodyPreview({ body }: { body: string }) {
+  const { theme, size, setTheme, setSize, hydrated } = useReadingSettings()
+
   const trimmed = body.trim()
   if (!trimmed) {
     return (
@@ -12,13 +16,28 @@ export default function BodyPreview({ body }: { body: string }) {
 
   const paragraphs = body.split(/\n{2,}/).filter((p) => p.trim().length > 0)
 
+  // hydration 完了前はサーバー描画と同じデフォルト値で表示
+  const themeClass = hydrated ? `reading-theme-${theme}` : 'reading-theme-default'
+  const sizeClass  = hydrated ? `reading-size-${size}`  : 'reading-size-m'
+
   return (
-    <article className="reading-content rounded-xl px-6 py-8 min-h-[calc(100vh-260px)]">
-      {paragraphs.map((para, i) => (
-        <p key={i} className="mb-4 leading-loose whitespace-pre-wrap">
-          {para}
-        </p>
-      ))}
-    </article>
+    <div className={themeClass}>
+      <ReadingControls
+        theme={theme}
+        size={size}
+        onThemeChange={setTheme}
+        onSizeChange={setSize}
+      />
+
+      <article
+        className={`reading-content reading-content--enhanced ${sizeClass} rounded-xl px-4 py-8 sm:px-8 sm:py-12 min-h-[calc(100vh-260px)]`}
+      >
+        {paragraphs.map((para, i) => (
+          <p key={i} className="whitespace-pre-wrap">
+            {para}
+          </p>
+        ))}
+      </article>
+    </div>
   )
 }

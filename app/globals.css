@@ -143,3 +143,84 @@ body {
 .safe-bottom {
   padding-bottom: env(safe-area-inset-bottom);
 }
+
+/* ============================================================
+   R-002: iOS Safari の入力フォーカス時オートズーム抑制
+   16px 未満の input/textarea/select はフォーカス時に自動ズームされる
+   ============================================================ */
+input, textarea, select {
+  font-size: 1rem;
+}
+
+/* ============================================================
+   R-003: 読書テーマ（読者向け章閲覧用）
+   .reading-theme-default / .reading-theme-sepia / .reading-theme-night
+   ============================================================ */
+.reading-theme-sepia {
+  --reading_bg:   #f5f0e8;
+  --reading_text: #4a3f33;
+}
+.reading-theme-night {
+  --reading_bg:   #1e1e1e;
+  --reading_text: #d4d0ca;
+}
+
+/* 読書文字サイズ（A- / A+ で切替） */
+.reading-size-s  { font-size: 0.9375rem;  /* 15px */ }
+.reading-size-m  { font-size: 1.0625rem;  /* 17px (default) */ }
+.reading-size-l  { font-size: 1.1875rem;  /* 19px */ }
+.reading-size-xl { font-size: 1.3125rem;  /* 21px */ }
+
+/* 読書本文の最適化（reading-content の拡張） */
+.reading-content--enhanced {
+  font-family: 'Hiragino Mincho ProN', 'Yu Mincho', 'YuMincho', '游明朝', 'Noto Serif JP', serif;
+  line-height: 2.1;
+  letter-spacing: 0.03em;
+  max-width: 680px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.reading-content--enhanced p {
+  margin-bottom: 1.6em;
+  text-indent: 1em;
+}
+
+/* ============================================================
+   R-004: ページ遷移プログレスバー
+   ============================================================ */
+.route-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: var(--theme);
+  z-index: 9999;
+  transform-origin: left center;
+  transition: transform 0.25s ease-out, opacity 0.3s ease-out;
+  pointer-events: none;
+}
+
+/* ============================================================
+   R-005: スクロール方向に応じたボトムナビ自動隠し
+   ============================================================ */
+.nav-hide-on-scroll {
+  transition: transform 0.25s ease-in-out;
+  will-change: transform;
+}
+.nav-hide-on-scroll[data-hidden="true"] {
+  transform: translateY(110%);
+}
+
+/* タップターゲット最小 48px 保証（Apple HIG / Material 推奨） */
+.tap-target {
+  min-height: 48px;
+  min-width: 48px;
+}
+
+/* フォーカスリングの可視化（R-011 一部先取り：キーボード操作時のみ表示） */
+:focus-visible {
+  outline: 2px solid var(--theme);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
