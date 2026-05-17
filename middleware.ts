@@ -3,7 +3,7 @@ import { NextResponse, type NextRequest } from 'next/server'
 
 /**
  * 認証ミドルウェア
- * - /login, /auth/* は認証不要
+ * - /login, /auth/*, /read/* は認証不要
  * - それ以外は認証必須（未ログインなら /login へリダイレクト）
  */
 export async function middleware(request: NextRequest) {
@@ -34,8 +34,8 @@ export async function middleware(request: NextRequest) {
 
   const { pathname } = request.nextUrl
 
-  // 認証不要ルート
-  const publicPaths = ['/login', '/auth']
+  // 認証不要ルート（R-019: 読者向け /read/* を追加）
+  const publicPaths = ['/login', '/auth', '/read']
   const isPublic = publicPaths.some((p) => pathname.startsWith(p))
 
   if (!user && !isPublic) {

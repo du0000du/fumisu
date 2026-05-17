@@ -110,6 +110,28 @@ export async function getRecentNovels(userId: string, limit = 5): Promise<Novel[
   return (data ?? []) as Novel[]
 }
 
+// ============================================================
+// 読者向け（公開）— R-019
+// ============================================================
+
+/**
+ * 公開作品1件を取得（読者向け、認証不要）。
+ * status が 'draft' / 'private' の作品は対象外。RLS で許可されている前提。
+ */
+export async function getPublicNovelById(id: string): Promise<Novel | null> {
+  const supabase = await createClient()
+
+  const { data, error } = await supabase
+    .from('novels')
+    .select('*')
+    .eq('id', id)
+    .in('status', ['ongoing', 'completed'])
+    .maybeSingle()
+
+  if (error) throw new Error(`getPublicNovelById: ${error.message}`)
+  return (data ?? null) as Novel | null
+}
+
 /** 今日（00:00以降）に更新された章の文字数合計 */
 export async function getTodayWordCount(userId: string): Promise<number> {
   const supabase = await createClient()
